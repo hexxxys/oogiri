@@ -6,11 +6,22 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const index = getCurrentIndex();
-  const answers = getAnswers(index);
-  return NextResponse.json({
-    question: QUESTIONS[index],
-    questionIndex: index,
-    answers,
-    timeUntilNextMs: getTimeUntilNextMs(),
-  });
+  try {
+    const answers = await getAnswers(index);
+    return NextResponse.json({
+      question: QUESTIONS[index],
+      questionIndex: index,
+      answers,
+      timeUntilNextMs: getTimeUntilNextMs(),
+    });
+  } catch (e) {
+    console.error('DB error:', e);
+    return NextResponse.json({
+      question: QUESTIONS[index],
+      questionIndex: index,
+      answers: [],
+      timeUntilNextMs: getTimeUntilNextMs(),
+      error: 'DB connection failed',
+    });
+  }
 }

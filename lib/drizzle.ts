@@ -6,7 +6,9 @@ let _db: NeonHttpDatabase<typeof schema> | null = null;
 
 export function getDb(): NeonHttpDatabase<typeof schema> {
   if (!_db) {
-    const sql = neon(process.env.DATABASE_URL!);
+    // Remove channel_binding parameter which is not supported by the HTTP transport
+    const url = process.env.DATABASE_URL!.replace(/[&?]channel_binding=[^&]*/g, '');
+    const sql = neon(url);
     _db = drizzle(sql, { schema });
   }
   return _db;

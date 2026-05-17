@@ -61,7 +61,7 @@ export default function HomePage() {
         setQuestionIndex(data.questionIndex);
         setTimeUntilNextMs(data.timeUntilNextMs);
       }
-      setAnswers(data.answers);
+      setAnswers(Array.isArray(data.answers) ? data.answers : []);
     } catch {
       // network error, ignore
     }
